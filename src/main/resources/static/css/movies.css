@@ -1,0 +1,46 @@
+.card {
+   word-wrap: break-word;
+   width: 500px;
+   margin-left: auto;
+   margin-right: auto;
+   color:white;
+   background: rgba(0, 0, 0, 0.3);
+   box-shadow: 0 0 5px rgba(0,0,0,0.5); 
+   padding: 2px;
+   font-variant: small-caps;
+   font-family: monospace ,Courier;
+   font-weight:900;	
+}
+.title {
+	margin-left: auto;
+	font-variant: small-caps;
+	font-family: monospace ,Courier;
+	font-size:40px;
+	text-align: center;
+	font-weight: bold;
+}
+
+html { 
+  background: url(https://getbg.net/upload/full/www.GetBg.net_Backgrounds_Royal_monogram__gray_background_098137_.png) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.fixedbut {
+	position: fixed;
+	top: 50%;
+	left: 150px;
+	display: block;
+	background: rgba(0, 0, 0, 0.5);
+	color: white;
+	text-decoration: monospace ,Courier;
+	padding: 6px 23px;
+	font-size: 17px;
+	border-radius: 25px;
+	box-shadow: 0 0 5px rgba(0,0,0,0.5); 
+}
+
+.fixedbut:hover {
+	background: #222;
+}

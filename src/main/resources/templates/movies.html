@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Recommended films</title>
+<link rel="stylesheet" th:href="@{/css/movies.css}" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+	<th:block th:each="film : ${films}">
+		<div class="row">
+			<div class="col s12 m7">
+				<div class="card">
+					<div class="card-image">
+						<p>
+							<img
+								th:src="'https://image.tmdb.org/t/p/w500'+${film.posterPath}">
+						</p>
+						<span class="card-title">
+							<p style= "text-decoration: underline;">
+								<em><strong>
+									<h2>	<td th:utext="${film.title}"></td></h2>
+								</strong></em>
+							</p>
+						</span>
+					</div>
+					<div class="card-content">
+						<p>
+						    <h4>Overview:</h4>
+							<td th:utext="${film.overview}">
+						</p>
+						<p>
+						    <td th:utext="'Popularity:'+ ${film.popularity}">
+						</p>
+						<p>
+							<td th:utext="'Vote average: '+ ${film.voteAverage}">
+						</p>
+	</th:block>
+	</div>
+	</div>
+	</div>
+	</div>
+	</th:block>
+	<a href="/moviesAdvicer/main"><div class="fixedbut">Go back</div></a>
+
+</div>
+
+</body>
+
+
+</html>
