@@ -45,7 +45,7 @@ public class TmdbApi {
 		UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(DISCOVER_URL).queryParam("api_key", API_KEY)
 				                                                                 .queryParam("sort_by", "vote_count.desc")
 				                                                                 .queryParam("include_video", "false")
-				                                                                 .queryParam("adult", "true")
+				                                                                 .queryParam("include_adult", "true")
 				                                                                 .queryParam("page", page)
 				                                                                 .queryParam(parameters)
                                                                                  .build();

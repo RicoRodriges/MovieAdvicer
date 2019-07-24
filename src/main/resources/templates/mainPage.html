@@ -13,7 +13,7 @@ $(document).ready(function(){
     $("#results").remove();
     $("body").append("<div id=\"results\"></div>");
     var film_name=$("#input-search").val()
-    var url = "https://api.themoviedb.org/3/search/movie?api_key=3706398aaf547b46e616831a46402288&language=en-US&query="+film_name+"&page=1&include_adult=false";
+    var url = "https://api.themoviedb.org/3/search/movie?api_key=3706398aaf547b46e616831a46402288&language=en-US&query="+film_name+"&page=1&include_adult=true";
     $.getJSON(url, function (json) {
       var results = json.results;
       for (var movie in results){
@@ -38,25 +38,25 @@ $(document).on('click',".remove-btn", function(){
    $("button.go-btn").hide();
 });
 $(document).on('click',".go-btn", function(){
-  var JsonMovies=[]; 
-  for  (var i in movies) {
-     JsonMovies.push({"id":parseInt(movies[i])});
-   }  
-    $.ajax({
-    type: "POST",
-    url: "/moviesAdvicer",
-    data: JSON.stringify(JsonMovies),
-    contentType: "application/json; charset=utf-8",
-    dataType: "text",
-    timeout: 600000
-    })
-    .done(function(){$(location).attr('href',"/moviesAdvicer/get/20");})
-    .fail(function(err){alert("Something went wrong :C");});  
+    var url="/moviesAdvicer/get/20?ids=";
+    for (var i in movies){
+       if(i<movies.length-1){ 
+         url+=movies[i]+",";
+       } else { 
+         url+=movies[i];
+       }
+    }
+    $("div.design").hide();
+    $("#results").hide();
+    $("body").append("<div class=\"cssload-loader\">Loading</div>");
+    $(location).attr('href',url);
+
 }); 
 });
 </script>
 </head>
 <body>
+<div class=design>
    <h2 class=site-title>Add base movie</h2>
 	<div class="wrap">
 		<div class="search">
@@ -64,16 +64,17 @@ $(document).on('click',".go-btn", function(){
 				placeholder="What movie are you looking for?">
 			<button type="submit" class="searchButton" id="searchButton">
 				<img
-					src="https://cdn3.iconfinder.com/data/icons/shopping-2/256/Searching-512.png"
+					src="/images/searching.png"
 					width="20px"> </img>
 			</button>
 		</div>
 	</div>
   <div class=count-panel>
-    <img class=movie-img src="https://cdn4.iconfinder.com/data/icons/audio-and-video/512/movie_clapboard_cinema_clapper_studio_equipment_flat_icon_symbol-512.png"  width="100px" >
+    <img class=movie-img src="/images/film.png"  width="100px" >
    <div class=text-count> </div> 
   </div>
   <button class=remove-btn>Remove all</button>
-  <button class=go-btn><img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Go_Logo_Aqua.svg/1280px-Go_Logo_Aqua.svg.png" width="100%" ></button>
+  <button class=go-btn><img  src="/images/go.png" width="100%" ></button>
+  </div>
 </body>
 </html>

@@ -1,5 +1,5 @@
 html { 
-  background: url(https://getbg.net/upload/full/www.GetBg.net_Backgrounds_Royal_monogram__gray_background_098137_.png) no-repeat center center fixed; 
+  background: url("/images/background.png") no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -110,9 +110,7 @@ body{
 .text-count{
   color: #00B4CC;
   position: relative;
-  width:60%;
-  top:-100%;
-  left:40%;
+
 }
 .remove-btn{
    position: absolute;
@@ -143,4 +141,14 @@ body{
 	 text-decoration: monospace ,Courier;
 	 font-size: 17px;
    cursor: pointer;
+}
+.cssload-loader {
+	margin: 106px auto;
+	position: relative;
+	box-sizing: border-box;
+	text-align: center;
+	 font-size: 10em;
+	z-index: 0;
+	color: 	#7FFFD4;
+
 }

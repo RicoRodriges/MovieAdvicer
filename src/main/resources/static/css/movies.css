@@ -1,4 +1,4 @@
-.card {
+.card {  
    word-wrap: break-word;
    width: 500px;
    margin-left: auto;
@@ -19,9 +19,8 @@
 	text-align: center;
 	font-weight: bold;
 }
-
 html { 
-  background: url(https://getbg.net/upload/full/www.GetBg.net_Backgrounds_Royal_monogram__gray_background_098137_.png) no-repeat center center fixed; 
+  background: url("/images/background.png") no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -40,7 +39,7 @@ html {
 	border-radius: 25px;
 	box-shadow: 0 0 5px rgba(0,0,0,0.5); 
 }
-
 .fixedbut:hover {
 	background: #222;
 }
+
