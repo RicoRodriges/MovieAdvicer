@@ -60,7 +60,7 @@ public class TmdbApi {
         return response.getBody();
     }
 
-    public ResponseEntity<ResponseForResults> getResponseFromDiscover(Integer page, String parameters) {
+    public ResponseForResults getResponseFromDiscover(Integer page, String parameters) {
         UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(host)
                 .pathSegment("discover", "movie")
                 .queryParam("api_key", key)
@@ -70,7 +70,7 @@ public class TmdbApi {
                 .queryParam("page", page)
                 .queryParam(parameters)
                 .build();
-        return exec(() -> restTemplate.getForEntity(uriBuilder.toString(), ResponseForResults.class));
+        return exec(() -> restTemplate.getForEntity(uriBuilder.toString(), ResponseForResults.class)).getBody();
     }
 
     private static <T> T exec(Supplier<T> func) {

@@ -77,9 +77,9 @@ public class MovieServiceAsync {
             int total_pages = -1;
             for (int page = 1; page < PAGE_ACTOR; page++) {
                 if (page > total_pages && total_pages != -1) break;
-                ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_people=" + id_actor);
-                if (total_pages == -1) total_pages = response.getBody().getTotalPages();
-                addIdstoMap(response.getBody().getResults(), films_with_rate);
+                ResponseForResults response = api.getResponseFromDiscover(page, "&with_people=" + id_actor);
+                if (total_pages == -1) total_pages = response.getTotalPages();
+                addIdstoMap(response.getResults(), films_with_rate);
             }
         });
         return new AsyncResult<String>("Maps update by actors.");
@@ -93,9 +93,9 @@ public class MovieServiceAsync {
                 int total_pages = -1;
                 for (int page = 1; page < PAGE_GENRES; page++) {
                     if (page > total_pages && total_pages != -1) break;
-                    ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_genres=" + genre.getId());
-                    if (total_pages == -1) total_pages = response.getBody().getTotalPages();
-                    addIdstoMap(response.getBody().getResults(), films_with_rate);
+                    ResponseForResults response = api.getResponseFromDiscover(page, "&with_genres=" + genre.getId());
+                    if (total_pages == -1) total_pages = response.getTotalPages();
+                    addIdstoMap(response.getResults(), films_with_rate);
                 }
             }
         }
@@ -113,9 +113,9 @@ public class MovieServiceAsync {
             int total_pages = -1;
             for (int page = 1; page < PAGE_KEYWORDS; page++) {
                 if (page > total_pages && total_pages != -1) break;
-                ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_keywords=" + id);
-                if (total_pages == -1) total_pages = response.getBody().getTotalPages();
-                addIdstoMap(response.getBody().getResults(), films_with_rate);
+                ResponseForResults response = api.getResponseFromDiscover(page, "&with_keywords=" + id);
+                if (total_pages == -1) total_pages = response.getTotalPages();
+                addIdstoMap(response.getResults(), films_with_rate);
             }
         });
         return new AsyncResult<String>("Maps update by keywords");
