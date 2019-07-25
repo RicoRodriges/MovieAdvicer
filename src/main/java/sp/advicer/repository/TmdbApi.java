@@ -16,6 +16,7 @@ import sp.advicer.entity.dto.responses.ResponseForCast;
 import sp.advicer.entity.dto.responses.ResponseForResults;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -60,17 +61,16 @@ public class TmdbApi {
         return response.getBody();
     }
 
-    public ResponseForResults getResponseFromDiscover(Integer page, String parameters) {
-        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(host)
+    public ResponseForResults getResponseFromDiscover(Integer page, Map<String, String> parameters) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(host)
                 .pathSegment("discover", "movie")
                 .queryParam("api_key", key)
                 .queryParam("sort_by", "vote_count.desc")
                 .queryParam("include_video", "false")
                 .queryParam("include_adult", "true")
-                .queryParam("page", page)
-                .queryParam(parameters)
-                .build();
-        return exec(() -> restTemplate.getForEntity(uriBuilder.toString(), ResponseForResults.class)).getBody();
+                .queryParam("page", page);
+        parameters.forEach(uriComponentsBuilder::queryParam);
+        return exec(() -> restTemplate.getForEntity(uriComponentsBuilder.build().toString(), ResponseForResults.class)).getBody();
     }
 
     private static <T> T exec(Supplier<T> func) {

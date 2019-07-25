@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -79,7 +80,7 @@ public class MovieServiceAsync {
             int total_pages = -1;
             for (int page = 1; page < PAGE_ACTOR; page++) {
                 if (page > total_pages && total_pages != -1) break;
-                ResponseForResults response = api.getResponseFromDiscover(page, "&with_people=" + id_actor);
+                ResponseForResults response = api.getResponseFromDiscover(page, Collections.singletonMap("with_people", id_actor.toString()));
                 if (total_pages == -1) total_pages = response.getTotalPages();
                 addIdstoMap(response.getResults(), films_with_rate);
             }
@@ -95,7 +96,7 @@ public class MovieServiceAsync {
                 int total_pages = -1;
                 for (int page = 1; page < PAGE_GENRES; page++) {
                     if (page > total_pages && total_pages != -1) break;
-                    ResponseForResults response = api.getResponseFromDiscover(page, "&with_genres=" + genre.getId());
+                    ResponseForResults response = api.getResponseFromDiscover(page, Collections.singletonMap("with_genres", genre.getId().toString()));
                     if (total_pages == -1) total_pages = response.getTotalPages();
                     addIdstoMap(response.getResults(), films_with_rate);
                 }
@@ -115,7 +116,7 @@ public class MovieServiceAsync {
             int total_pages = -1;
             for (int page = 1; page < PAGE_KEYWORDS; page++) {
                 if (page > total_pages && total_pages != -1) break;
-                ResponseForResults response = api.getResponseFromDiscover(page, "&with_keywords=" + id);
+                ResponseForResults response = api.getResponseFromDiscover(page, Collections.singletonMap("with_keywords", id.toString()));
                 if (total_pages == -1) total_pages = response.getTotalPages();
                 addIdstoMap(response.getResults(), films_with_rate);
             }
