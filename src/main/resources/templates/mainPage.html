@@ -1,80 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" th:href="@{/css/mainPage.css}" />
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-  var movies = [];
-  $("div.text-count").text(movies.length+" movies selected");
-  $("button.go-btn").hide();
-  $("button").click(function(){ 
-    $("#results").remove();
-    $("body").append("<div id=\"results\"></div>");
-    var film_name=$("#input-search").val()
-    var url = "https://api.themoviedb.org/3/search/movie?api_key=3706398aaf547b46e616831a46402288&language=en-US&query="+film_name+"&page=1&include_adult=true";
-    $.getJSON(url, function (json) {
-      var results = json.results;
-      for (var movie in results){
-        $("#results").append("<p class=results >"+results[movie].title+"</p>")
-        $("#results").append("<p class=results><img width=\"60%\" class=results src=\"https://image.tmdb.org/t/p/w300"+results[movie].poster_path+"\" </img></p>");
-        $("#results").append("<p class=film-button id=\""+results[movie].id+"\"> <button>+</button></p>")
-        $("#results").append("</div>");
-        $("#results").append("<hr>");
-      }     
-     });
-    
-    
-  });
- $(document).on('click',".film-button", function(){
-   if (!movies.includes(this.id)) movies.push(this.id);
-   $("div.text-count").text(movies.length+" movies selected");
-     $("button.go-btn").show();
-});
-$(document).on('click',".remove-btn", function(){
-   movies=[];
-  $("div.text-count").text(movies.length+" movies selected");
-   $("button.go-btn").hide();
-});
-$(document).on('click',".go-btn", function(){
-    var url="/moviesAdvicer/get/20?ids=";
-    for (var i in movies){
-       if(i<movies.length-1){ 
-         url+=movies[i]+",";
-       } else { 
-         url+=movies[i];
-       }
-    }
-    $("div.design").hide();
-    $("#results").hide();
-    $("body").append("<div class=\"cssload-loader\">Loading</div>");
-    $(location).attr('href',url);
+    <link rel="stylesheet" th:href="@{/css/mainPage.css}"/>
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var movies = [];
+            $("div.text-count").text(movies.length + " movies selected");
+            $("button.go-btn").hide();
+            $("button").click(function () {
+                $("#results").remove();
+                $("body").append("<div id=\"results\"></div>");
+                var film_name = $("#input-search").val()
+                var url = "https://api.themoviedb.org/3/search/movie?api_key=3706398aaf547b46e616831a46402288&language=en-US&query=" + film_name + "&page=1&include_adult=true";
+                $.getJSON(url, function (json) {
+                    var results = json.results;
+                    for (var movie in results) {
+                        $("#results").append("<p class=results >" + results[movie].title + "</p>")
+                        $("#results").append("<p class=results><img width=\"60%\" class=results src=\"https://image.tmdb.org/t/p/w300" + results[movie].poster_path + "\" </img></p>");
+                        $("#results").append("<p class=film-button id=\"" + results[movie].id + "\"> <button>+</button></p>")
+                        $("#results").append("</div>");
+                        $("#results").append("<hr>");
+                    }
+                });
 
-}); 
-});
-</script>
+
+            });
+            $(document).on('click', ".film-button", function () {
+                if (!movies.includes(this.id)) movies.push(this.id);
+                $("div.text-count").text(movies.length + " movies selected");
+                $("button.go-btn").show();
+            });
+            $(document).on('click', ".remove-btn", function () {
+                movies = [];
+                $("div.text-count").text(movies.length + " movies selected");
+                $("button.go-btn").hide();
+            });
+            $(document).on('click', ".go-btn", function () {
+                var url = "/moviesAdvicer/get/20?ids=";
+                for (var i in movies) {
+                    if (i < movies.length - 1) {
+                        url += movies[i] + ",";
+                    } else {
+                        url += movies[i];
+                    }
+                }
+                $("div.design").hide();
+                $("#results").hide();
+                $("body").append("<div class=\"cssload-loader\">Loading</div>");
+                $(location).attr('href', url);
+
+            });
+        });
+    </script>
 </head>
 <body>
 <div class=design>
-   <h2 class=site-title>Add base movie</h2>
-	<div class="wrap">
-		<div class="search">
-			<input type="text" class="searchTerm" id="input-search"
-				placeholder="What movie are you looking for?">
-			<button type="submit" class="searchButton" id="searchButton">
-				<img
-					src="/images/searching.png"
-					width="20px"> </img>
-			</button>
-		</div>
-	</div>
-  <div class=count-panel>
-    <img class=movie-img src="/images/film.png"  width="100px" >
-   <div class=text-count> </div> 
-  </div>
-  <button class=remove-btn>Remove all</button>
-  <button class=go-btn><img  src="/images/go.png" width="100%" ></button>
-  </div>
+    <h2 class=site-title>Add base movie</h2>
+    <div class="wrap">
+        <div class="search">
+            <input type="text" class="searchTerm" id="input-search"
+                   placeholder="What movie are you looking for?">
+            <button type="submit" class="searchButton" id="searchButton">
+                <img
+                        src="/images/searching.png"
+                        width="20px"> </img>
+            </button>
+        </div>
+    </div>
+    <div class=count-panel>
+        <img class=movie-img src="/images/film.png" width="100px">
+        <div class=text-count></div>
+    </div>
+    <button class=remove-btn>Remove all</button>
+    <button class=go-btn><img src="/images/go.png" width="100%"></button>
+</div>
 </body>
 </html>

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class Keyword {
-	private Integer id;
-	private String name;
+    private Integer id;
+    private String name;
 }
