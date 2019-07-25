@@ -2,6 +2,7 @@ package sp.advicer.service;
 
 import org.springframework.stereotype.Service;
 import sp.advicer.entity.dto.film.Film;
+import sp.advicer.repository.TmdbApi;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 @Service
 public class MovieServiceImpl {
     MovieServiceAsync msa = new MovieServiceAsync();
+    private TmdbApi api = new TmdbApi();
 
     private void deleteBaseIdInMap(List<Film> baseFilms, Map<Integer, Integer> films_with_rate) {
         for (Film film : baseFilms) {
@@ -32,7 +34,15 @@ public class MovieServiceImpl {
         return films_list;
     }
 
-    public List<Integer> getRecomendationList(Integer number_of_films, List<Film> films) {
+    private List<Film> getListFilmsByIds(Collection<Integer> ids) {
+        return ids.stream()
+                .distinct()
+                .map(api::getMovieById)
+                .collect(Collectors.toList());
+    }
+
+    public List<Film> getRecomendationList(Integer number_of_films, Collection<Integer> ids) {
+        List<Film> films = getListFilmsByIds(ids);
         Map<Integer, Integer> films_with_rate = new ConcurrentHashMap<Integer, Integer>();
         Future<String> castFut = msa.fillMapByCast(films, films_with_rate);
         Future<String> genresFut = msa.fillMapByGenres(films, films_with_rate);
@@ -52,6 +62,6 @@ public class MovieServiceImpl {
             }
         }
         deleteBaseIdInMap(films, films_with_rate);
-        return getListIdFromMap(number_of_films, films_with_rate);
+        return getListFilmsByIds(getListIdFromMap(number_of_films, films_with_rate));
     }
 }
