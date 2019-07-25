@@ -11,8 +11,9 @@ import sp.advicer.repository.TmdbApi;
 import sp.advicer.service.MovieServiceImpl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Controller
@@ -21,18 +22,17 @@ public class MovieController {
     private TmdbApi api = new TmdbApi();
 
     @GetMapping(path = "/moviesAdvicer/get/{number}")
-    public ModelAndView getSome(@PathVariable("number") Integer number, @RequestParam List<Integer> ids) {
+    public ModelAndView getSome(@PathVariable("number") Integer number, @RequestParam Set<Integer> ids) {
         if (number < 1) throw new RestClientException("Wrong number of films");
         if (ids.isEmpty()) throw new RestClientException("There must be at least one id.");
-        List<Integer> films_id = new ArrayList<Integer>(new HashSet<>(ids));
-        List<Film> films = getListFilmsByIds(films_id);
+        List<Film> films = getListFilmsByIds(ids);
         List<Film> recommendFilms = getListFilmsByIds(movieService.getRecomendationList(number, films));
         ModelAndView modelAndView = new ModelAndView("movies");
         modelAndView.addObject("films", recommendFilms);
         return modelAndView;
     }
 
-    private List<Film> getListFilmsByIds(List<Integer> ids) {
+    private List<Film> getListFilmsByIds(Collection<Integer> ids) {
         List<Film> films = new ArrayList<Film>();
         for (Integer id : ids) {
             try {
