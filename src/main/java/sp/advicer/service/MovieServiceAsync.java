@@ -1,11 +1,9 @@
 package sp.advicer.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
 import sp.advicer.entity.dto.actor.Actor;
 import sp.advicer.entity.dto.film.Film;
 import sp.advicer.entity.dto.film.Genre;
@@ -13,12 +11,10 @@ import sp.advicer.entity.dto.keyword.Keyword;
 import sp.advicer.entity.dto.responses.ResponseForResults;
 import sp.advicer.repository.TmdbApi;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class MovieServiceAsync {
@@ -57,40 +53,14 @@ public class MovieServiceAsync {
     }
 
     private void fillActorsByFilm(Film film, Map<Integer, Integer> cast_with_count) {
-        List<Actor> actors = new ArrayList<Actor>();
-        try {
-            actors = api.getActorsListById(film.getId());
-        } catch (RestClientException ex) {
-            if (ex.getMessage().contains("429")) {
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                    actors = api.getActorsListById(film.getId());
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            } else {
-                new ResponseEntity<>("Something went wrong", HttpStatus.EXPECTATION_FAILED);
-            }
-        }
+        List<Actor> actors = api.getActorsListById(film.getId());
         for (Actor actor : actors) {
             addBaseMovieCast(actor, cast_with_count);
         }
     }
 
     private void fillKeywordsByFilm(Film film, Map<Integer, Integer> keywords_with_count) {
-        List<Keyword> keywords = new ArrayList<Keyword>();
-        try {
-            keywords = api.getListKeywordsById(film.getId());
-        } catch (RestClientException e) {
-            if (e.getMessage().contains("429")) {
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                    keywords = api.getListKeywordsById(film.getId());
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
+        List<Keyword> keywords = api.getListKeywordsById(film.getId());
         for (Keyword word : keywords) {
             addKeyword(word, keywords_with_count);
         }
@@ -107,22 +77,9 @@ public class MovieServiceAsync {
             int total_pages = -1;
             for (int page = 1; page < PAGE_ACTOR; page++) {
                 if (page > total_pages && total_pages != -1) break;
-                try {
-                    ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_people=" + id_actor);
-                    if (total_pages == -1) total_pages = response.getBody().getTotalPages();
-                    addIdstoMap(response.getBody().getResults(), films_with_rate);
-                } catch (RestClientException e) {
-                    if (e.getMessage().contains("429")) {
-                        try {
-                            System.out.println("Thread actors:Wait for 10 seconds");
-                            TimeUnit.SECONDS.sleep(10);
-                            ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_people=" + id_actor);
-                            if (total_pages == -1) total_pages = response.getBody().getTotalPages();
-                            addIdstoMap(response.getBody().getResults(), films_with_rate);
-                        } catch (Exception exp) {
-                        }
-                    }
-                }
+                ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_people=" + id_actor);
+                if (total_pages == -1) total_pages = response.getBody().getTotalPages();
+                addIdstoMap(response.getBody().getResults(), films_with_rate);
             }
         });
         return new AsyncResult<String>("Maps update by actors.");
@@ -136,22 +93,9 @@ public class MovieServiceAsync {
                 int total_pages = -1;
                 for (int page = 1; page < PAGE_GENRES; page++) {
                     if (page > total_pages && total_pages != -1) break;
-                    try {
-                        ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_genres=" + genre.getId());
-                        if (total_pages == -1) total_pages = response.getBody().getTotalPages();
-                        addIdstoMap(response.getBody().getResults(), films_with_rate);
-                    } catch (RestClientException e) {
-                        if (e.getMessage().contains("429")) {
-                            try {
-                                System.out.println("Thread genres:Wait for 10 seconds");
-                                TimeUnit.SECONDS.sleep(10);
-                                ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_genres=" + genre.getId());
-                                if (total_pages == -1) total_pages = response.getBody().getTotalPages();
-                                addIdstoMap(response.getBody().getResults(), films_with_rate);
-                            } catch (Exception ex) {
-                            }
-                        }
-                    }
+                    ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_genres=" + genre.getId());
+                    if (total_pages == -1) total_pages = response.getBody().getTotalPages();
+                    addIdstoMap(response.getBody().getResults(), films_with_rate);
                 }
             }
         }
@@ -169,22 +113,9 @@ public class MovieServiceAsync {
             int total_pages = -1;
             for (int page = 1; page < PAGE_KEYWORDS; page++) {
                 if (page > total_pages && total_pages != -1) break;
-                try {
-                    ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_keywords=" + id);
-                    if (total_pages == -1) total_pages = response.getBody().getTotalPages();
-                    addIdstoMap(response.getBody().getResults(), films_with_rate);
-                } catch (RestClientException e) {
-                    if (e.getMessage().contains("429")) {
-                        try {
-                            System.out.println("Thread keywords:Wait for 10 seconds");
-                            TimeUnit.SECONDS.sleep(10);
-                            ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_keywords=" + id);
-                            if (total_pages == -1) total_pages = response.getBody().getTotalPages();
-                            addIdstoMap(response.getBody().getResults(), films_with_rate);
-                        } catch (Exception exp) {
-                        }
-                    }
-                }
+                ResponseEntity<ResponseForResults> response = api.getResponseFromDiscover(page, "&with_keywords=" + id);
+                if (total_pages == -1) total_pages = response.getBody().getTotalPages();
+                addIdstoMap(response.getBody().getResults(), films_with_rate);
             }
         });
         return new AsyncResult<String>("Maps update by keywords");

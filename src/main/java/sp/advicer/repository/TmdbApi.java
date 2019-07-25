@@ -14,6 +14,8 @@ import sp.advicer.entity.dto.responses.ResponseForCast;
 import sp.advicer.entity.dto.responses.ResponseForResults;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 @Repository
 public class TmdbApi {
@@ -22,25 +24,25 @@ public class TmdbApi {
     private final String MOVIE_URL = "https://api.themoviedb.org/3/movie/";
     private final String DISCOVER_URL = "https://api.themoviedb.org/3/discover/movie";
 
-    public List<Actor> getActorsListById(Integer id) throws RestClientException {
+    public List<Actor> getActorsListById(Integer id) {
         UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(MOVIE_URL + id + "/credits")
                 .queryParam("api_key", API_KEY)
                 .build();
-        ResponseEntity<ResponseForCast> response = restTemplate.getForEntity(uriBuilder.toString(), ResponseForCast.class);
+        ResponseEntity<ResponseForCast> response = exec(() -> restTemplate.getForEntity(uriBuilder.toString(), ResponseForCast.class));
         return response.getBody().getCast();
     }
 
-    public List<Keyword> getListKeywordsById(Integer id) throws RestClientException {
+    public List<Keyword> getListKeywordsById(Integer id) {
         UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(MOVIE_URL + id + "/keywords").queryParam("api_key", API_KEY)
                 .build();
-        ResponseEntity<Keywords> response_keywords = restTemplate.getForEntity(uriBuilder.toString(), Keywords.class);
+        ResponseEntity<Keywords> response_keywords = exec(() -> restTemplate.getForEntity(uriBuilder.toString(), Keywords.class));
         return response_keywords.getBody().getKeywords();
     }
 
-    public Film getMovieById(Integer id) throws RestClientException {
+    public Film getMovieById(Integer id) {
         UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(MOVIE_URL + id).queryParam("api_key", API_KEY)
                 .build();
-        ResponseEntity<Film> response = restTemplate.getForEntity(uriBuilder.toString(), Film.class);
+        ResponseEntity<Film> response = exec(() -> restTemplate.getForEntity(uriBuilder.toString(), Film.class));
         return response.getBody();
     }
 
@@ -52,6 +54,26 @@ public class TmdbApi {
                 .queryParam("page", page)
                 .queryParam(parameters)
                 .build();
-        return restTemplate.getForEntity(uriBuilder.toString(), ResponseForResults.class);
+        return exec(() -> restTemplate.getForEntity(uriBuilder.toString(), ResponseForResults.class));
+    }
+
+    private static <T> T exec(Supplier<T> func) {
+        int count = 5;
+        int timeout = 3;
+        while (true) {
+            try {
+                return func.get();
+            } catch (RestClientException e) {
+                if (count >= 0 && e.getMessage().contains("429")) {
+                    try {
+                        TimeUnit.SECONDS.sleep(timeout);
+                    } catch (InterruptedException ex) {
+                    }
+                    count--;
+                } else {
+                    throw e;
+                }
+            }
+        }
     }
 }

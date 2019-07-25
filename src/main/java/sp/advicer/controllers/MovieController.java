@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.servlet.ModelAndView;
 import sp.advicer.entity.dto.film.Film;
 import sp.advicer.repository.TmdbApi;
@@ -14,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 @Controller
 public class MovieController {
@@ -35,18 +33,7 @@ public class MovieController {
     private List<Film> getListFilmsByIds(Collection<Integer> ids) {
         List<Film> films = new ArrayList<Film>();
         for (Integer id : ids) {
-            try {
-                films.add(api.getMovieById(id));
-            } catch (RestClientException e) {
-                if (e.getMessage().contains("429")) {
-                    try {
-                        TimeUnit.SECONDS.sleep(10);
-                        films.add(api.getMovieById(id));
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            }
+            films.add(api.getMovieById(id));
         }
         return films;
     }
