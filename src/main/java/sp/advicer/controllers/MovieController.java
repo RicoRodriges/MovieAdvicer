@@ -23,8 +23,8 @@ public class MovieController {
 
     @GetMapping(path = "/moviesAdvicer/get/{number}")
     public ModelAndView getSome(@PathVariable("number") Integer number, @RequestParam Set<Integer> ids) {
-        if (number < 1) throw new RestClientException("Wrong number of films");
-        if (ids.isEmpty()) throw new RestClientException("There must be at least one id.");
+        if (number < 1) throw new IllegalArgumentException("Wrong number of films");
+        if (ids.isEmpty()) throw new IllegalArgumentException("There must be at least one id.");
         List<Film> films = getListFilmsByIds(ids);
         List<Film> recommendFilms = getListFilmsByIds(movieService.getRecomendationList(number, films));
         ModelAndView modelAndView = new ModelAndView("movies");
