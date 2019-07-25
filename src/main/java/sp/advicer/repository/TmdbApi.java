@@ -26,8 +26,8 @@ public class TmdbApi {
     private final String host;
 
     @Autowired
-    public TmdbApi(@Value("api.key") String apiKey,
-                   @Value("api.host") String apiHost) {
+    public TmdbApi(@Value("${api.key}") String apiKey,
+                   @Value("${api.host}") String apiHost) {
         this.key = apiKey;
         this.host = apiHost;
         this.restTemplate = new RestTemplate();
