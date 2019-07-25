@@ -49,20 +49,15 @@ public class MovieServiceImpl {
         Future<String> castFut = msa.fillMapByCast(films, films_with_rate);
         Future<String> genresFut = msa.fillMapByGenres(films, films_with_rate);
         Future<String> keywordsFut = msa.fillMapByKeywords(films, films_with_rate);
-        while (true) {
-            if (castFut.isDone() && genresFut.isDone() && keywordsFut.isDone()) {
-                try {
-                    System.out.println(castFut.get());
-                    System.out.println(genresFut.get());
-                    System.out.println(keywordsFut.get());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
+
+        try {
+            System.out.println(castFut.get());
+            System.out.println(genresFut.get());
+            System.out.println(keywordsFut.get());
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
+
         deleteBaseIdInMap(films, films_with_rate);
         return getListFilmsByIds(getListIdFromMap(number_of_films, films_with_rate));
     }
