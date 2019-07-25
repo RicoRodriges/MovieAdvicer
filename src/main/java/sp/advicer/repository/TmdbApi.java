@@ -1,5 +1,7 @@
 package sp.advicer.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClientException;
@@ -19,35 +21,49 @@ import java.util.function.Supplier;
 
 @Repository
 public class TmdbApi {
-    RestTemplate restTemplate = new RestTemplate();
-    private final String API_KEY = "3706398aaf547b46e616831a46402288";
-    private final String MOVIE_URL = "https://api.themoviedb.org/3/movie/";
-    private final String DISCOVER_URL = "https://api.themoviedb.org/3/discover/movie";
+    private final RestTemplate restTemplate;
+    private final String key;
+    private final String host;
+
+    @Autowired
+    public TmdbApi(@Value("api.key") String apiKey,
+                   @Value("api.host") String apiHost) {
+        this.key = apiKey;
+        this.host = apiHost;
+        this.restTemplate = new RestTemplate();
+    }
 
     public List<Actor> getActorsListById(Integer id) {
-        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(MOVIE_URL + id + "/credits")
-                .queryParam("api_key", API_KEY)
+        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(host)
+                .pathSegment("movie", id.toString(), "credits")
+                .queryParam("api_key", key)
                 .build();
         ResponseEntity<ResponseForCast> response = exec(() -> restTemplate.getForEntity(uriBuilder.toString(), ResponseForCast.class));
         return response.getBody().getCast();
     }
 
     public List<Keyword> getListKeywordsById(Integer id) {
-        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(MOVIE_URL + id + "/keywords").queryParam("api_key", API_KEY)
+        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(host)
+                .pathSegment("movie", id.toString(), "keywords")
+                .queryParam("api_key", key)
                 .build();
         ResponseEntity<Keywords> response_keywords = exec(() -> restTemplate.getForEntity(uriBuilder.toString(), Keywords.class));
         return response_keywords.getBody().getKeywords();
     }
 
     public Film getMovieById(Integer id) {
-        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(MOVIE_URL + id).queryParam("api_key", API_KEY)
+        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(host)
+                .pathSegment("movie", id.toString())
+                .queryParam("api_key", key)
                 .build();
         ResponseEntity<Film> response = exec(() -> restTemplate.getForEntity(uriBuilder.toString(), Film.class));
         return response.getBody();
     }
 
     public ResponseEntity<ResponseForResults> getResponseFromDiscover(Integer page, String parameters) {
-        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(DISCOVER_URL).queryParam("api_key", API_KEY)
+        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(host)
+                .pathSegment("discover", "movie")
+                .queryParam("api_key", key)
                 .queryParam("sort_by", "vote_count.desc")
                 .queryParam("include_video", "false")
                 .queryParam("include_adult", "true")
