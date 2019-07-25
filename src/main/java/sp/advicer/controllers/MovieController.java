@@ -8,7 +8,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.servlet.ModelAndView;
 import sp.advicer.entity.dto.film.Film;
 import sp.advicer.repository.TmdbApi;
-import sp.advicer.service.MovieService;
 import sp.advicer.service.MovieServiceImpl;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 @Controller
 public class MovieController {
-    private MovieService movieService = new MovieServiceImpl();
+    private MovieServiceImpl movieService = new MovieServiceImpl();
     private TmdbApi api = new TmdbApi();
 
     @GetMapping(path = "/moviesAdvicer/get/{number}")

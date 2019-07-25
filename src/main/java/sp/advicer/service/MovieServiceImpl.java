@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class MovieServiceImpl implements MovieService {
+public class MovieServiceImpl {
     MovieServiceAsync msa = new MovieServiceAsync();
 
     private void deleteBaseIdInMap(List<Film> baseFilms, Map<Integer, Integer> films_with_rate) {
@@ -32,7 +32,6 @@ public class MovieServiceImpl implements MovieService {
         return films_list;
     }
 
-    @Override
     public List<Integer> getRecomendationList(Integer number_of_films, List<Film> films) {
         Map<Integer, Integer> films_with_rate = new ConcurrentHashMap<Integer, Integer>();
         Future<String> castFut = msa.fillMapByCast(films, films_with_rate);
