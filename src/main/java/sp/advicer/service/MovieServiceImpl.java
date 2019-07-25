@@ -1,5 +1,6 @@
 package sp.advicer.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sp.advicer.entity.dto.film.Film;
 import sp.advicer.repository.TmdbApi;
@@ -12,9 +13,10 @@ import java.util.stream.Collectors;
 
 
 @Service
+@RequiredArgsConstructor
 public class MovieServiceImpl {
-    MovieServiceAsync msa = new MovieServiceAsync();
-    private TmdbApi api = new TmdbApi();
+    private final MovieServiceAsync msa;
+    private final TmdbApi api;
 
     private void deleteBaseIdInMap(List<Film> baseFilms, Map<Integer, Integer> films_with_rate) {
         for (Film film : baseFilms) {

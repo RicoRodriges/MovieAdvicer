@@ -1,6 +1,6 @@
 package sp.advicer.service;
 
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
@@ -17,11 +17,13 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 @Component
+@RequiredArgsConstructor
 public class MovieServiceAsync {
-    private final int PAGE_GENRES = 3;
-    private final int PAGE_ACTOR = 2;
-    private final int PAGE_KEYWORDS = 3;
-    private TmdbApi api = new TmdbApi();
+    private static final int PAGE_GENRES = 3;
+    private static final int PAGE_ACTOR = 2;
+    private static final int PAGE_KEYWORDS = 3;
+
+    private final TmdbApi api;
 
     private void addBaseMovieCast(Actor actor, Map<Integer, Integer> cast_with_count) {
         if (cast_with_count.containsKey(actor.getId())) {

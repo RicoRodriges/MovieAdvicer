@@ -1,5 +1,6 @@
 package sp.advicer.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,8 +13,9 @@ import java.util.List;
 import java.util.Set;
 
 @Controller
+@RequiredArgsConstructor
 public class MovieController {
-    private MovieServiceImpl movieService = new MovieServiceImpl();
+    private final MovieServiceImpl movieService;
 
     @GetMapping(path = "/moviesAdvicer/get/{number}")
     public ModelAndView getSome(@PathVariable("number") Integer number, @RequestParam Set<Integer> ids) {
