@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class Keywords {
-    List<Keyword> keywords;
+    private List<Keyword> keywords;
 }

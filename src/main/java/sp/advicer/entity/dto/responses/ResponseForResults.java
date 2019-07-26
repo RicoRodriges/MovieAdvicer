@@ -8,8 +8,8 @@ import java.util.List;
 
 @Data
 public class ResponseForResults {
-    Integer page;
+    private Integer page;
     @JsonProperty("total_pages")
-    Integer totalPages;
-    List<Film> results;
+    private Integer totalPages;
+    private List<Film> results;
 }

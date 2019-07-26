@@ -7,6 +7,5 @@ import java.util.List;
 
 @Data
 public class ResponseForCast {
-    List<Actor> cast;
-
+    private List<Actor> cast;
 }
