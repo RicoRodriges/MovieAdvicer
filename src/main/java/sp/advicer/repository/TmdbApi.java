@@ -15,6 +15,7 @@ import sp.advicer.entity.dto.keyword.Keywords;
 import sp.advicer.entity.dto.responses.ResponseForCast;
 import sp.advicer.entity.dto.responses.ResponseForResults;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +44,7 @@ public class TmdbApi {
         return response.getBody().getCast();
     }
 
-    public List<Keyword> getListKeywordsById(Integer id) {
+    public List<Keyword> getKeywordsByFilmId(Integer id) {
         UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(host)
                 .pathSegment("movie", id.toString(), "keywords")
                 .queryParam("api_key", key)
@@ -71,6 +72,22 @@ public class TmdbApi {
                 .queryParam("page", page);
         parameters.forEach(uriComponentsBuilder::queryParam);
         return exec(() -> restTemplate.getForEntity(uriComponentsBuilder.build().toString(), ResponseForResults.class)).getBody();
+    }
+
+    public List<Film> getAllFilmsByParameters(int size, Map<String, String> parameters) {
+        List<Film> films = new ArrayList<>(size);
+        int page = 1;
+        do {
+            ResponseForResults response = getResponseFromDiscover(page, parameters);
+            if (response.getTotalPages() == -1) {
+                break;
+            }
+            response.getResults().stream()
+                    .limit(size - films.size())
+                    .forEach(films::add);
+            page++;
+        } while (films.size() < size);
+        return films;
     }
 
     private static <T> T exec(Supplier<T> func) {
