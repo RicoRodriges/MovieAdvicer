@@ -85,6 +85,9 @@ public class TmdbApi {
             response.getResults().stream()
                     .limit(size - films.size())
                     .forEach(films::add);
+            if (response.getTotalPages() <= page) {
+                break;
+            }
             page++;
         } while (films.size() < size);
         return films;
