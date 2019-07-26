@@ -30,28 +30,17 @@
                 <div class="card-content">
                     <p>
                     <h4>Overview:</h4>
-                    <td th:utext="${film.overview}">
-                        </p>
-                        <p>>
-                    <td th:utext="'Popularity: '+${film.popularity}+' .'">
-                        </p>
-                        <p>
-                    <td th:utext="'Vote average:'+ ${film.voteAverage}+' .'">
-                        </p>
-                        <hr>
-</th:block>
-</div>
-</div>
-</div>
-</div>
+                    <div th:utext="${film.overview}"></div>
+                    <div th:utext="'Popularity: '+${film.popularity}+' .'"></div>
+                    <div th:utext="'Vote average:'+ ${film.voteAverage}+' .'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </th:block>
 <a href="/moviesAdvicer/main">
     <div class="fixedbut">Go back</div>
 </a>
 
-</div>
-
 </body>
-
-
 </html>

@@ -55,4 +55,8 @@ public class MovieServiceImpl {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Integer::sum));
     }
+
+    public List<Film> findFilmsByName(String name) {
+        return api.getFilmsByName(name);
+    }
 }

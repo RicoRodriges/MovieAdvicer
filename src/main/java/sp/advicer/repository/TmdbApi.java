@@ -44,6 +44,19 @@ public class TmdbApi {
         return response.getBody().getCast();
     }
 
+    public List<Film> getFilmsByName(String name) {
+        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(host)
+                .pathSegment("search", "movie")
+                .queryParam("api_key", key)
+                .queryParam("language", "en-US")
+                .queryParam("query", name)
+                .queryParam("page", "1")
+                .queryParam("include_adult", "true")
+                .build();
+        ResponseEntity<ResponseForResults> response = exec(() -> restTemplate.getForEntity(uriBuilder.toString(), ResponseForResults.class));
+        return response.getBody().getResults();
+    }
+
     public List<Keyword> getKeywordsByFilmId(Integer id) {
         UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(host)
                 .pathSegment("movie", id.toString(), "keywords")

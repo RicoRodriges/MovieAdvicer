@@ -13,17 +13,15 @@
                 $("#results").remove();
                 $("body").append("<div id=\"results\"></div>");
                 var film_name = $("#input-search").val()
-                var url = "https://api.themoviedb.org/3/search/movie?api_key=3706398aaf547b46e616831a46402288&language=en-US&query=" + film_name + "&page=1&include_adult=true";
-                $.getJSON(url, function (json) {
-                    var results = json.results;
-                    for (var movie in results) {
-                        $("#results").append("<p class=results >" + results[movie].title + "</p>")
-                        $("#results").append("<p class=results><img width=\"60%\" class=results src=\"https://image.tmdb.org/t/p/w300" + results[movie].poster_path + "\" </img></p>");
-                        $("#results").append("<p class=film-button id=\"" + results[movie].id + "\"> <button>+</button></p>")
+                $.getJSON("movies", {q: film_name}, results =>
+                    results.forEach(movie => {
+                        $("#results").append("<p class=results >" + movie.title + "</p>")
+                        $("#results").append("<p class=results><img width=\"60%\" class=results src=\"https://image.tmdb.org/t/p/w300" + movie.poster_path + "\" /></p>");
+                        $("#results").append("<p class=film-button id=\"" + movie.id + "\"> <button>+</button></p>")
                         $("#results").append("</div>");
                         $("#results").append("<hr>");
-                    }
-                });
+                    })
+                );
 
 
             });
@@ -38,7 +36,7 @@
                 $("button.go-btn").hide();
             });
             $(document).on('click', ".go-btn", function () {
-                var url = "/moviesAdvicer/get/20?ids=";
+                var url = "/moviesAdvicer/propose?count=20&ids=";
                 for (var i in movies) {
                     if (i < movies.length - 1) {
                         url += movies[i] + ",";
@@ -65,7 +63,7 @@
             <button type="submit" class="searchButton" id="searchButton">
                 <img
                         src="/images/searching.png"
-                        width="20px"> </img>
+                        width="20px"/>
             </button>
         </div>
     </div>

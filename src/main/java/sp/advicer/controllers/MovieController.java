@@ -2,9 +2,7 @@ package sp.advicer.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import sp.advicer.entity.dto.film.Film;
 import sp.advicer.service.MovieServiceImpl;
@@ -34,5 +32,11 @@ public class MovieController {
     @GetMapping(path = "/main")
     public String mainPage() {
         return "mainPage";
+    }
+
+    @GetMapping(path = "/movies")
+    @ResponseBody
+    public List<Film> findFilmByName(@RequestParam("q") String name) {
+        return movieService.findFilmsByName(name);
     }
 }
