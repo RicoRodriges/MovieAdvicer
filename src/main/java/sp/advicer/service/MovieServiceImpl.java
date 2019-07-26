@@ -46,7 +46,7 @@ public class MovieServiceImpl {
     public List<Film> getRecomendationList(Integer number_of_films, Collection<Integer> ids) {
         List<Film> films = getListFilmsByIds(ids);
         Map<Integer, Integer> films_with_rate = new ConcurrentHashMap<Integer, Integer>();
-        Future<String> castFut = msa.fillMapByCast(films, films_with_rate);
+        Future<Map<Film, Integer>> castFut = msa.getFilmWithScoreByCast(films);
         Future<Map<Film, Integer>> genresFut = msa.getFilmWithScoreByGenres(films);
         Future<Map<Film, Integer>> keywordsFut = msa.getFilmWithScoreByKeywords(films);
 

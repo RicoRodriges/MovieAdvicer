@@ -35,7 +35,7 @@ public class TmdbApi {
         this.restTemplate = new RestTemplate();
     }
 
-    public List<Actor> getActorsListById(Integer id) {
+    public List<Actor> getActorsByFilmId(Integer id) {
         UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(host)
                 .pathSegment("movie", id.toString(), "credits")
                 .queryParam("api_key", key)
@@ -62,7 +62,7 @@ public class TmdbApi {
         return response.getBody();
     }
 
-    public ResponseForResults getResponseFromDiscover(Integer page, Map<String, String> parameters) {
+    private ResponseForResults getResponseFromDiscover(Integer page, Map<String, String> parameters) {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(host)
                 .pathSegment("discover", "movie")
                 .queryParam("api_key", key)
