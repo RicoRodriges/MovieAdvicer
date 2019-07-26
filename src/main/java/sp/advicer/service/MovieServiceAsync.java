@@ -6,7 +6,6 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import sp.advicer.entity.dto.actor.Actor;
 import sp.advicer.entity.dto.film.Film;
-import sp.advicer.entity.dto.film.Genre;
 import sp.advicer.entity.dto.responses.ResponseForResults;
 import sp.advicer.repository.TmdbApi;
 
@@ -16,7 +15,7 @@ import java.util.concurrent.Future;
 @Component
 @RequiredArgsConstructor
 public class MovieServiceAsync {
-    private static final int PAGE_GENRES = 3;
+    private static final int MAX_FILM_COUNT_BY_GENRES = 60;
     private static final int PAGE_ACTOR = 2;
     private static final int MAX_FILM_COUNT_BY_KEYWORD = 60;
 
@@ -75,20 +74,18 @@ public class MovieServiceAsync {
     }
 
     @Async
-    public Future<String> fillMapByGenres(List<Film> baseFilms, Map<Integer, Integer> films_with_rate) {
-        for (Film film : baseFilms) {
-            List<Genre> genres = film.getGenres();
-            for (Genre genre : genres) {
-                int total_pages = -1;
-                for (int page = 1; page < PAGE_GENRES; page++) {
-                    if (page > total_pages && total_pages != -1) break;
-                    ResponseForResults response = api.getResponseFromDiscover(page, Collections.singletonMap("with_genres", genre.getId().toString()));
-                    if (total_pages == -1) total_pages = response.getTotalPages();
-                    addIdstoMap(response.getResults(), films_with_rate);
-                }
-            }
-        }
-        return new AsyncResult<String>("Maps update by genres.");
+    public Future<Map<Film, Integer>> getFilmWithScoreByGenres(List<Film> baseFilms) {
+        HashMap<Film, Integer> result = new HashMap<>();
+
+        baseFilms.stream()
+                .map(Film::getGenres)
+                .flatMap(Collection::stream)
+                .forEach(genre -> {
+                    List<Film> films = api.getAllFilmsByParameters(MAX_FILM_COUNT_BY_GENRES, Collections.singletonMap("with_genres", genre.getId().toString()));
+                    addFilmsToMapWithScore(films, result);
+                });
+
+        return new AsyncResult<>(result);
     }
 
     @Async
